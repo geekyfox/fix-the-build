@@ -3,7 +3,15 @@ BEGIN {
 }
 
 END {
+	space = 0
+	if (accum) {
+		space = 1
+	}
 	flush()
+
+	if (space) {
+		print ""
+	}
 }
 
 /^[-=#]+$/ {
@@ -19,6 +27,9 @@ END {
 }
 
 {
+	gsub(/",/, ",\"")
+	gsub(/"\./, ".\"")
+
 	if (accum) {
 		accum = accum " "
 	}
