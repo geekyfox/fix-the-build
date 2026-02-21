@@ -1,5 +1,6 @@
 BEGIN {
 	PAR = 0
+	UL = 0
 }
 
 /^## (.+)$/ {
@@ -13,6 +14,10 @@ BEGIN {
 }
 
 /^(w*)$/ {
+	if (UL) {
+		print "</li></ul>"
+		UL = 0
+	}
 	if (PAR) {
 		print "</p>"
 		PAR = 0
@@ -21,18 +26,28 @@ BEGIN {
 	next
 }
 
+/^- / {
+	if (UL) {
+		print "</li><li>"
+	} else {
+		print "<ul><li>"
+		UL = 1
+	}
+	sub(/^- /, "")
+}
+
 {
-	if (! PAR) {
+	if ((!PAR) && (!UL)) {
 		print "<p>"
 		PAR = 1
 	}
 
-    gsub(/",/, ",\"")
-    gsub(/"\./, ".\"")
+	gsub(/",/, ",\"")
+	gsub(/"\./, ".\"")
 
-    gsub(/^"/, "\\&#8220;")
-    gsub(/ "/, " \\&#8220;")
-    gsub(/"/,  "\\&#8221;")
+	gsub(/^"/, "\\&#8220;")
+	gsub(/ "/, " \\&#8220;")
+	gsub(/"/,  "\\&#8221;")
 
 	print
 }
