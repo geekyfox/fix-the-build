@@ -43,6 +43,7 @@ END {
 
 function flush() {
 	gsub(/^[ ]+/, "", accum)
+	gsub(/[ ]+$/, "", accum)
 	while (accum) {
 		len = length(accum)
 
